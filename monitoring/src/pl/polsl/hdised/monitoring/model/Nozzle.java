@@ -10,6 +10,7 @@ public class Nozzle {
 	private int tankId;
 	private Calendar timestamp;
 	private float fuelCounter;
+	private Float fuelCounterDelta = null;
 	
 	public Nozzle(String line) {
 		
@@ -34,5 +35,13 @@ public class Nozzle {
 	
 	public float getFuelCounter() {
 		return fuelCounter;
+	}
+	
+	public float getFuelCounterDelta() {
+		return fuelCounterDelta;
+	}
+	
+	public void setFuelCounterDelta(float fuelCounterDelta) {
+		this.fuelCounterDelta = fuelCounterDelta;
 	}
 }

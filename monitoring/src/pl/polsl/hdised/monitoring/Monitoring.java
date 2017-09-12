@@ -10,10 +10,10 @@ import java.nio.file.Paths;
 
 public class Monitoring {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
 		if (args.length != 4) {
-			System.err.println("Specify server'port, output file, data points resolution (in seconds) and"
+			System.err.println("Specify server'port, output file, data points resolution (in minutes) and"
 					+ "maximum number of iterations (0 means infinite) in application's arguments");
 			return;
 		}
@@ -24,8 +24,8 @@ public class Monitoring {
 			return;
 		}
 		
-		Integer dataPointsResolutionInSeconds = Helpers.tryParseInt(args[2]);
-		if (dataPointsResolutionInSeconds == null) {
+		Integer dataPointsResolutionInMinutes = Helpers.tryParseInt(args[2]);
+		if (dataPointsResolutionInMinutes == null) {
 			System.err.println("Resolution must be an integral number.");
 			return;
 		}
@@ -42,44 +42,40 @@ public class Monitoring {
 		try {
 			if (!outputFile.createNewFile()) {
 				System.err.println("Specified file already exists.");
-				return;
+				//return;
 			}
 		} catch (Exception ex) {
 			System.err.println("File occured while creating output file.");
 			return;
 		}
 		
+		System.out.println("Connecting...");
+		Socket socket = new Socket("localhost", port);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		
+		System.out.println("Connected.");
+		
 		try {
-			System.out.println("Connecting...");
-			Socket socket = new Socket("localhost", port);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			
-			System.out.println("Connected.");
-			
-			try {
-				Monitor monitor = new Monitor(dataPointsResolutionInSeconds);
-				String message;
-				Long it = 0l;
-				while ((message = reader.readLine()) != null) {
-					System.out.println(message);
-					monitor.accept(message);
-					
-					if (maxIterations != 0) {
-						it++;
-						if (it == maxIterations) {
-							System.out.println("Reached maximum number of iterations.");
-							break;
-						}
+			Monitor monitor = new Monitor();
+			String message;
+			Long it = 0l;
+			while ((message = reader.readLine()) != null) {
+				System.out.println(message);
+				monitor.accept(message);
+				
+				if (maxIterations != 0) {
+					it++;
+					if (it == maxIterations) {
+						System.out.println("Reached maximum number of iterations.");
+						break;
 					}
 				}
-			} catch (SocketException ex) {
-				System.err.println("Server has disconnected.");
-			} finally {
-				reader.close();
-				socket.close();
 			}
-		} catch (Exception ex) {
-			System.err.println(ex.getMessage());
+		} catch (SocketException ex) {
+			System.err.println("Server has disconnected.");
+		} finally {
+			reader.close();
+			socket.close();
 		}
 		
 		System.out.println("Stopping...");
