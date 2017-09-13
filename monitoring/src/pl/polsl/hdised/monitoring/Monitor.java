@@ -96,7 +96,7 @@ public class Monitor {
 					float tankDeltasSum = sumInRange(tankEntry.getValue(), actual, next);
 					
 					Map<Calendar, Float> refuelEntry = refuels.get(tankId);
-					float refuelsSum = refuelEntry == null ? 0 : sumInRange(refuelEntry, start, next);
+					float refuelsSum = refuelEntry == null ? 0 : sumInRange(refuelEntry, actual, next);
 					
 					float balance = tankDeltasSum + nozzleDeltasSum - refuelsSum;
 					tanksSeries.put(position, balance);
