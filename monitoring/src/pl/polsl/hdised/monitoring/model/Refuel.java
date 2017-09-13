@@ -13,7 +13,7 @@ public class Refuel {
 	public Refuel(String line) {
 		
 		String[] tokens = line.split(";");
-		timestamp = Helpers.parseDateTime(tokens[0]);
+		timestamp = Helpers.parseCalendar(tokens[0]);
 		tankId = Integer.parseInt(tokens[1]);
 		fuelVolume = Helpers.parseFloat(tokens[2]);
 	}

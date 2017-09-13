@@ -15,7 +15,7 @@ public class Nozzle {
 	public Nozzle(String line) {
 		
 		String[] tokens = line.split(";");
-		timestamp = Helpers.parseDateTime(tokens[0]);
+		timestamp = Helpers.parseCalendar(tokens[0]);
 		id = Integer.parseInt(tokens[2]);
 		tankId = Integer.parseInt(tokens[3]);
 		fuelCounter = Helpers.parseFloat(tokens[5]);

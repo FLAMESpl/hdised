@@ -7,14 +7,17 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Calendar;
 
 public class Monitoring {
 
 	public static void main(String[] args) throws Exception {
 		
-		if (args.length != 4) {
-			System.err.println("Specify server'port, output file, data points resolution (in minutes) and"
-					+ "maximum number of iterations (0 means infinite) in application's arguments");
+		if (args.length != 6) {
+			System.err.println("Specify in application's arguments server'port, output file, "
+					+ "data points resolution (in minutes),"
+					+ "maximum number of iterations (0 means infinite),"
+					+ "start and end of data series.");
 			return;
 		}
 		
@@ -33,6 +36,18 @@ public class Monitoring {
 		Long maxIterations = Helpers.tryParseLong(args[3]);
 		if (maxIterations == null) {
 			System.err.println("Maximum number of iterations must be an integral number");
+			return;
+		}
+		
+		Calendar start = Helpers.tryParseCalendar(args[4]);
+		if (start == null) {
+			System.err.println("Unparsable start date. Must be `yy-MM-dd HH:mm:ss`.");
+			return;
+		}
+		
+		Calendar end = Helpers.tryParseCalendar(args[5]);
+		if (end == null) {
+			System.err.println("Unparsable end date. Must be `yy-MM-dd HH:mm:ss`.");
 			return;
 		}
 		
@@ -58,19 +73,22 @@ public class Monitoring {
 		try {
 			Monitor monitor = new Monitor();
 			String message;
-			Long it = 0l;
+			Long it = 1l;
 			while ((message = reader.readLine()) != null) {
 				System.out.println(message);
 				monitor.accept(message);
 				
 				if (maxIterations != 0) {
 					it++;
-					if (it == maxIterations) {
+					if (it > maxIterations) {
 						System.out.println("Reached maximum number of iterations.");
 						break;
 					}
 				}
 			}
+			
+			monitor.save(outputFile, dataPointsResolutionInMinutes, start, end);
+			
 		} catch (SocketException ex) {
 			System.err.println("Server has disconnected.");
 		} finally {

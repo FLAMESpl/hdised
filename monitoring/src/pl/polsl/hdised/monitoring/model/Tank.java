@@ -17,7 +17,7 @@ public class Tank {
 	public Tank(String line) {
 
 		String[] tokens = line.split(";");
-		timestamp = Helpers.parseDateTime(tokens[0]);
+		timestamp = Helpers.parseCalendar(tokens[0]);
 		id = Integer.parseInt(tokens[3]);
 		fuelVolume = Helpers.parseFloat(tokens[5]);
 		nozzles = new HashMap<>();
