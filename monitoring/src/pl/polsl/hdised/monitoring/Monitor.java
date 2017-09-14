@@ -116,7 +116,6 @@ public class Monitor {
 		}
 
 		writeHeaders(file, tanksSeriesPositions);
-		int x = 1;
 	}
 	
 	private float sumInRange(Map<Calendar, Float> source, Calendar start, Calendar end) {

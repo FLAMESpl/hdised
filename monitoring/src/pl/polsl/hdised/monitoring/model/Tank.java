@@ -11,8 +11,6 @@ public class Tank {
 	private int id;
 	private Calendar timestamp;
 	private float fuelVolume;
-	private Float fuelVolumeDelta = null;
-	private Map<Integer, Nozzle> nozzles;
 	
 	public Tank(String line) {
 
@@ -20,7 +18,6 @@ public class Tank {
 		timestamp = Helpers.parseCalendar(tokens[0]);
 		id = Integer.parseInt(tokens[3]);
 		fuelVolume = Helpers.parseFloat(tokens[5]);
-		nozzles = new HashMap<>();
 	}
 	
 	public int getId() {
@@ -33,17 +30,5 @@ public class Tank {
 	
 	public float getFuelVolume() {
 		return fuelVolume;
-	}
-	
-	public float getFuelDelta() {
-		return fuelVolumeDelta;
-	}
-	
-	public void setFuelVolumeDelta(float fuelVolumeDelta) {
-		this.fuelVolumeDelta = fuelVolumeDelta;
-	}
-	
-	public Map<Integer, Nozzle> getNozzles() {
-		return nozzles;
 	}
 }

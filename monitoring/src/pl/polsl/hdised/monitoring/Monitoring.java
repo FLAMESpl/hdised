@@ -57,7 +57,7 @@ public class Monitoring {
 		try {
 			if (!outputFile.createNewFile()) {
 				System.err.println("Specified file already exists.");
-				//return;
+				return;
 			}
 		} catch (Exception ex) {
 			System.err.println("File occured while creating output file.");
